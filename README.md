@@ -9,11 +9,11 @@ VocalForge Agent is a professional AI-powered voice generation pipeline designed
 - Text expansion to meet target word/character count  
  - Empty file detection and fixing  
 - Professional logging with colored terminal output  
-- *Extensible design*: Easily add new voices or providers  
+- Extensible design: Easily add new voices or providers  
 ## Repository Structure
 Vocalforge_Agent/
 │
-├── scripts/                 # Core scripts for voice generation
+├── scripts/                 
 │   ├── select_gender.py
 │   ├── select_language.py
 │   ├── select_duration.py
@@ -28,9 +28,8 @@ Vocalforge_Agent/
 ├── output/                  # Final outputs (ignored in .gitignore)
 ├── temp/                    # Temporary files (ignored in .gitignore)
 ├── requirements.txt          # Python dependencies
----
 ## Installation
-```bash
+bash
 # Clone repository
 git clone https://github.com/sultan9723/Vocalforge_Agent.git
 cd Vocalforge_Agent
