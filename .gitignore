@@ -1,0 +1,33 @@
+# Python cache
+_pycache_/
+*.pyc
+
+# Env and config
+.env
+
+# Audio and output folders
+output/
+voices/
+temp/
+
+# IDE/editor files (optional)
+.vscode/
+*.log.env
+voices/
+output/
+temp/
+_pycache_/
+*.pyc
+.env
+voices/
+output/
+temp/
+_pycache_/
+*.pyc
+.env
+voices/
+output/
+temp/
+_pycache_/
+.pyc
+.log
