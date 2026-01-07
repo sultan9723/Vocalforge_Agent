@@ -7,10 +7,16 @@ import requests
 import random
 from dotenv import load_dotenv
 load_dotenv()
-# === Azure Keys & Region ===
+# Load Azure configuration from environment
 azure_key = os.getenv("AZURE_API_KEY")
-region = os.getenv("AZURE_REGION")
+region = os.getenv("AZURE_REGION", "eastus")
 endpoint = os.getenv("AZURE_ENDPOINT")
+
+# Support multiple Azure keys (comma-separated in .env)
+AZURE_KEYS = [key.strip() for key in azure_key.split(",")] if azure_key else []
+
+if not AZURE_KEYS:
+    print("Warning: No Azure API keys found in .env file. Will use gTTS fallback only.")
 
 
 # Voices: Male 1 → Female → Male 2
@@ -28,16 +34,20 @@ FILLERS = [
 ]
 
 def get_azure_key():
+    """Get current Azure key from rotation list"""
     global current_key_index
-    if current_key_index >= len(AZURE_KEYS):
+    if not AZURE_KEYS or current_key_index >= len(AZURE_KEYS):
         return None
     return AZURE_KEYS[current_key_index]
 
 def switch_key():
+    """Switch to next Azure key in rotation"""
     global current_key_index
     current_key_index += 1
     if current_key_index >= len(AZURE_KEYS):
-        print("❌ All Azure keys exhausted! Switching permanently to gTTS fallback.")
+        print("All Azure keys exhausted. Switching permanently to gTTS fallback.")
+    else:
+        print(f"Switching to Azure key #{current_key_index + 1}")
 
 # === File Selection ===
 input_number = sys.argv[1] if len(sys.argv) > 1 else "001"
@@ -121,19 +131,20 @@ for i, text in enumerate(speaker_texts):
         }
 
         try:
-            response = requests.post(AZURE_ENDPOINT, headers=headers, data=ssml.encode('utf-8'))
+            response = requests.post(endpoint, headers=headers, data=ssml.encode('utf-8'))
             if response.status_code == 200:
                 with open(output_path, "wb") as f:
                     f.write(response.content)
-                print(f"✅ Saved: {output_path}")
+                print(f"Saved: {output_path}")
                 azure_available = False
             elif response.status_code in [429, 403]:
-                print("⚠ Azure quota exceeded! Switching key...")
+                print("Azure quota exceeded. Switching key...")
                 switch_key()
             else:
-                print(f"❌ Azure TTS Error {response.status_code}: {response.text}")
+                print(f"Azure TTS Error {response.status_code}: {response.text}")
                 azure_available = False
-        except:
+        except Exception as e:
+            print(f"Azure connection error: {e}")
             azure_available = False
 
     # === gTTS fallback if Azure unavailable ===
