@@ -113,5 +113,5 @@ def main():
 
     print("✅ Done expanding selected short files.")
 
-if __name__== "__main__":
+if __name__ == "__main__":
     main()
