@@ -8,7 +8,7 @@ load_dotenv()
 gemini_key = os.getenv("GEMINI_API_KEY")
 
 # Support multiple Gemini API keys (comma-separated)
-API_KEYS = [key.strip() for key in gemini_key.split(",")] if gemini_key else []
+API_KEYS = [key.strip() for key in gemini_key.split(",")] if gemini_key and gemini_key.strip() else []
 
 if not API_KEYS:
     raise ValueError("No GEMINI_API_KEY found in .env file")

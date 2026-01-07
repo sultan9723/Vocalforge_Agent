@@ -13,7 +13,7 @@ region = os.getenv("AZURE_REGION", "eastus")
 endpoint = os.getenv("AZURE_ENDPOINT")
 
 # Support multiple Azure keys (comma-separated in .env)
-AZURE_KEYS = [key.strip() for key in azure_key.split(",")] if azure_key else []
+AZURE_KEYS = [key.strip() for key in azure_key.split(",")] if azure_key and azure_key.strip() else []
 
 if not AZURE_KEYS:
     print("Warning: No Azure API keys found in .env file. Will use gTTS fallback only.")
@@ -143,7 +143,7 @@ for i, text in enumerate(speaker_texts):
             else:
                 print(f"Azure TTS Error {response.status_code}: {response.text}")
                 azure_available = False
-        except Exception as e:
+        except (requests.RequestException, ConnectionError) as e:
             print(f"Azure connection error: {e}")
             azure_available = False
 
