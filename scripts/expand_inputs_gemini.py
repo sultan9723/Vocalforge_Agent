@@ -4,8 +4,14 @@ import re
 import requests
 from dotenv import load_dotenv
 load_dotenv()
-# === Config ===
+# Load Gemini configuration from environment
 gemini_key = os.getenv("GEMINI_API_KEY")
+
+# Support multiple Gemini API keys (comma-separated)
+API_KEYS = [key.strip() for key in gemini_key.split(",")] if gemini_key and gemini_key.strip() else []
+
+if not API_KEYS:
+    raise ValueError("No GEMINI_API_KEY found in .env file")
 ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 HEADERS = {"Content-Type": "application/json"}
 INPUT_DIR = "inputs"
@@ -107,5 +113,5 @@ def main():
 
     print("✅ Done expanding selected short files.")
 
-if __name__== "__main__":
+if __name__ == "__main__":
     main()
